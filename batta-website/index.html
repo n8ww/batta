@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BATTA — مصورة فوتوغرافية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Tajawal:wght@200;300;400;500;700;800&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #b8956a;          /* ذهبي معدني أساسي */
+    --bg-2: #a08055;        /* ذهبي أغمق للأقسام البديلة */
+    --bg-dark: #3d2f1f;     /* بني داكن للتباين */
+    --ink: #1a0f08;         /* أسود غني */
+    --ink-dim: #2d1f12;     /* بني داكن جداً */
+    --ink-mute: #5a4530;    /* بني متوسط */
+    --gold: #d4b886;        /* ذهبي فاتح للهايلايت */
+    --gold-bright: #e8d4a8; /* ذهبي ساطع */
+    --line: rgba(26, 15, 8, 0.18);
+    --line-strong: rgba(26, 15, 8, 0.35);
+    --serif: "Cormorant Garamond", "Playfair Display", serif;
+    --serif-display: "Playfair Display", serif;
+    --arabic: "Tajawal", sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  /* كل الخطوط سيدا بدون ميلان */
+  *, *::before, *::after { font-style: normal !important; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    background-image:
+      /* أعمدة عمودية فاتحة وداكنة مثل المعدن المصقول */
+      linear-gradient(90deg,
+        rgba(232, 212, 168, 0.4) 0%,
+        rgba(184, 149, 106, 0.2) 8%,
+        rgba(232, 212, 168, 0.5) 18%,
+        rgba(120, 90, 55, 0.3) 28%,
+        rgba(184, 149, 106, 0.2) 40%,
+        rgba(232, 212, 168, 0.4) 52%,
+        rgba(140, 105, 65, 0.3) 65%,
+        rgba(232, 212, 168, 0.45) 78%,
+        rgba(160, 125, 80, 0.3) 90%,
+        rgba(232, 212, 168, 0.4) 100%
+      ),
+      /* خطوط أفقية رفيعة مثل الـ brushed metal */
+      repeating-linear-gradient(0deg,
+        transparent 0px,
+        rgba(255, 240, 210, 0.04) 1px,
+        transparent 2px,
+        rgba(60, 40, 20, 0.03) 3px
+      ),
+      var(--bg);
+    color: var(--ink);
+    font-family: var(--arabic);
+    font-weight: 400;
+    overflow-x: hidden;
+    line-height: 1.7;
+    background-attachment: fixed;
+  }
+
+  /* Grain overlay */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.08;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode: multiply;
+  }
+
+  /* Custom cursor accent dot */
+  .cursor-dot {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    background: var(--ink);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.15s ease, opacity 0.3s ease;
+    opacity: 0;
+  }
+
+  /* ========== NAV ========== */
+  nav {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    padding: 16px 56px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    background: linear-gradient(to bottom, rgba(26, 15, 8, 0.85) 0%, rgba(26, 15, 8, 0.5) 70%, transparent 100%);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(212, 184, 134, 0.2);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .logo img {
+    height: 70px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+    font-size: 13px;
+    letter-spacing: 0.15em;
+    font-weight: 500;
+  }
+  .nav-links a {
+    color: var(--gold-bright);
+    text-decoration: none;
+    transition: color 0.3s;
+    position: relative;
+  }
+  .nav-links a:hover { color: #ffffff; }
+  .nav-links a::after {
+    content: "";
+    position: absolute;
+    bottom: -6px;
+    right: 0;
+    width: 0;
+    height: 1px;
+    background: var(--gold-bright);
+    transition: width 0.3s;
+  }
+  .nav-links a:hover::after { width: 100%; }
+
+  /* ========== HERO ========== */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 60px;
+    align-items: center;
+    padding: 140px 56px 80px;
+    position: relative;
+  }
+
+  .hero-text {
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.5em;
+    color: var(--bg-dark);
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    animation: fadeUp 1s 0.2s both;
+    font-weight: 600;
+  }
+  .hero-eyebrow::before {
+    content: "";
+    width: 40px;
+    height: 1px;
+    background: var(--bg-dark);
+  }
+
+  .hero h1 {
+    font-family: var(--serif-display);
+    font-size: clamp(56px, 8vw, 112px);
+    line-height: 0.95;
+    font-weight: 600;
+    margin-bottom: 32px;
+    letter-spacing: -0.02em;
+    animation: fadeUp 1s 0.4s both;
+    color: var(--ink);
+    text-shadow: 0 1px 0 rgba(255, 240, 210, 0.3);
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--bg-dark);
+    font-weight: 700;
+    background: linear-gradient(180deg, #5a3f1f 0%, #2d1f0f 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero-sub {
+    font-size: 17px;
+    color: var(--ink-dim);
+    max-width: 480px;
+    margin-bottom: 48px;
+    line-height: 1.9;
+    animation: fadeUp 1s 0.6s both;
+    font-weight: 500;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    animation: fadeUp 1s 0.8s both;
+  }
+
+  .btn {
+    padding: 18px 36px;
+    font-family: var(--arabic);
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    font-weight: 600;
+    border: 1px solid var(--ink);
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.4s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-primary {
+    background: var(--ink);
+    color: var(--gold-bright);
+    border-color: var(--ink);
+  }
+  .btn-primary:hover {
+    background: transparent;
+    color: var(--ink);
+  }
+  .btn-ghost:hover {
+    background: var(--ink);
+    color: var(--gold-bright);
+  }
+
+  .hero-image {
+    position: relative;
+    height: 80vh;
+    animation: fadeIn 1.5s 0.3s both;
+  }
+  .hero-image-frame {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+  .hero-image-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 30% 40%, rgba(232, 212, 168, 0.5) 0%, transparent 60%),
+      linear-gradient(135deg, #3d2f1f 0%, #1a0f08 60%, #2d1f0f 100%);
+  }
+  .hero-image svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .hero-logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 85%;
+    max-width: 540px;
+    height: auto;
+    filter: drop-shadow(0 4px 30px rgba(232, 212, 168, 0.5));
+    z-index: 2;
+  }
+  .hero-image-label {
+    position: absolute;
+    bottom: 24px;
+    right: 24px;
+    font-family: var(--serif);
+    font-size: 14px;
+    color: var(--gold-bright);
+    writing-mode: horizontal-tb;
+  }
+  .hero-image-num {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    font-family: var(--serif-display);
+    font-size: 12px;
+    letter-spacing: 0.3em;
+    color: var(--gold-bright);
+  }
+
+  /* Scroll indicator */
+  .scroll-indicator {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    color: var(--ink-dim);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+  }
+  .scroll-indicator::after {
+    content: "";
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--ink-dim), transparent);
+    animation: scrollPulse 2s infinite;
+  }
+
+  /* ========== SECTION SHARED ========== */
+  section {
+    padding: 140px 56px;
+    position: relative;
+  }
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 0.5em;
+    color: var(--bg-dark);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 700;
+  }
+  .section-label::before {
+    content: "";
+    width: 24px;
+    height: 1px;
+    background: var(--bg-dark);
+  }
+  .section-title {
+    font-family: var(--serif-display);
+    font-size: clamp(40px, 5vw, 68px);
+    line-height: 1.05;
+    font-weight: 600;
+    margin-bottom: 24px;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .section-title em {
+    font-style: normal;
+    color: var(--bg-dark);
+    font-weight: 700;
+  }
+
+  /* ========== ABOUT ========== */
+  .about {
+    background: linear-gradient(180deg, transparent 0%, rgba(61, 47, 31, 0.08) 50%, transparent 100%);
+    border-top: 1px solid var(--line-strong);
+    border-bottom: 1px solid var(--line-strong);
+  }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .about-portrait {
+    aspect-ratio: 3/4;
+    background:
+      radial-gradient(circle at 50% 30%, rgba(232, 212, 168, 0.4) 0%, transparent 50%),
+      linear-gradient(180deg, #3d2f1f 0%, #1a0f08 100%);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(26, 15, 8, 0.3);
+  }
+  .about-portrait svg {
+    width: 100%;
+    height: 100%;
+  }
+  .about-portrait::after {
+    content: "Portrait of the Artist";
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-family: var(--serif);
+    font-size: 12px;
+    color: var(--gold-bright);
+    letter-spacing: 0.1em;
+  }
+  .about-content p {
+    font-size: 17px;
+    color: var(--ink-dim);
+    margin-bottom: 24px;
+    line-height: 2;
+    font-weight: 500;
+  }
+  .about-content p strong {
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  .signature {
+    margin-top: 40px;
+    font-family: var(--serif);
+    font-size: 32px;
+    color: var(--bg-dark);
+    font-weight: 600;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    margin-top: 64px;
+    padding-top: 48px;
+    border-top: 1px solid var(--line-strong);
+  }
+  .stat-num {
+    font-family: var(--serif-display);
+    font-size: 56px;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  .stat-label {
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    color: var(--ink-mute);
+    font-weight: 600;
+  }
+
+  /* ========== PORTFOLIO ========== */
+  .portfolio-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    margin-bottom: 80px;
+    flex-wrap: wrap;
+    gap: 32px;
+  }
+  .filters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .filter-btn {
+    padding: 10px 22px;
+    background: transparent;
+    border: 1px solid var(--line-strong);
+    color: var(--ink-dim);
+    font-family: var(--arabic);
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 600;
+  }
+  .filter-btn.active,
+  .filter-btn:hover {
+    background: var(--ink);
+    color: var(--gold-bright);
+    border-color: var(--ink);
+  }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 16px;
+  }
+  .gallery-item {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    background: var(--bg-dark);
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 10px 30px rgba(26, 15, 8, 0.25);
+  }
+  .gallery-item:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(26, 15, 8, 0.4);
+  }
+
+  /* ===== Category blocks ===== */
+  .category-block {
+    margin-bottom: 120px;
+  }
+  .category-block:last-child { margin-bottom: 0; }
+
+  .category-header {
+    display: flex;
+    align-items: flex-end;
+    gap: 32px;
+    margin-bottom: 48px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--line-strong);
+  }
+  .category-num {
+    font-family: var(--serif-display);
+    font-size: 80px;
+    line-height: 0.8;
+    color: var(--bg-dark);
+    font-weight: 700;
+    opacity: 0.5;
+    letter-spacing: -0.04em;
+  }
+  .category-title {
+    font-family: var(--serif-display);
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  .category-title em {
+    font-style: normal;
+    color: var(--bg-dark);
+    font-weight: 700;
+  }
+  .category-desc {
+    color: var(--ink-dim);
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.6;
+  }
+
+  /* ===== Coming Soon block ===== */
+  .coming-soon {
+    text-align: center;
+    padding: 80px 40px;
+    background: linear-gradient(135deg, rgba(61, 47, 31, 0.15) 0%, rgba(26, 15, 8, 0.08) 100%);
+    border: 1px dashed var(--line-strong);
+    border-radius: 4px;
+  }
+  .coming-soon-icon {
+    font-size: 64px;
+    margin-bottom: 24px;
+    opacity: 0.8;
+  }
+  .coming-soon-title {
+    font-family: var(--serif-display);
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 16px;
+    letter-spacing: -0.01em;
+  }
+  .coming-soon-title em {
+    font-style: normal;
+    color: var(--bg-dark);
+    font-weight: 700;
+  }
+  .coming-soon-text {
+    font-size: 16px;
+    color: var(--ink-dim);
+    max-width: 500px;
+    margin: 0 auto 32px;
+    line-height: 1.9;
+    font-weight: 500;
+  }
+  .coming-soon-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* ===== Image placeholders ===== */
+  .placeholder {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #3d2f1f 0%, #1a0f08 60%, #2d1f0f 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    border: 2px dashed rgba(232, 212, 168, 0.25);
+  }
+  .placeholder-icon {
+    font-size: 48px;
+    opacity: 0.6;
+  }
+  .placeholder-text {
+    color: var(--gold-bright);
+    font-size: 18px;
+    font-weight: 600;
+    font-family: var(--arabic);
+  }
+  .placeholder-name {
+    color: rgba(232, 212, 168, 0.5);
+    font-size: 11px;
+    font-family: monospace;
+    letter-spacing: 0.05em;
+    direction: ltr;
+  }
+  /* When real image is used, hide placeholder */
+  .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .gallery-item:hover img { transform: scale(1.05); }
+
+  .gallery-item-1 { grid-column: span 7; aspect-ratio: 4/3; }
+  .gallery-item-2 { grid-column: span 5; aspect-ratio: 3/4; }
+  .gallery-item-3 { grid-column: span 4; aspect-ratio: 1; }
+  .gallery-item-4 { grid-column: span 4; aspect-ratio: 1; }
+  .gallery-item-5 { grid-column: span 4; aspect-ratio: 1; }
+  .gallery-item-6 { grid-column: span 5; aspect-ratio: 3/4; }
+  .gallery-item-7 { grid-column: span 7; aspect-ratio: 4/3; }
+
+  .gallery-item svg {
+    width: 100%;
+    height: 100%;
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .gallery-item:hover svg { transform: scale(1.05); }
+
+  .gallery-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 50%, rgba(26, 15, 8, 0.95) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    padding: 32px;
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .gallery-item:hover .gallery-overlay { opacity: 1; }
+  .gallery-cat {
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    color: var(--gold-bright);
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  .gallery-title {
+    font-family: var(--serif-display);
+    font-size: 24px;
+    color: #ffffff;
+    font-weight: 600;
+  }
+
+  /* ========== SERVICES ========== */
+  .services {
+    background: linear-gradient(180deg, transparent 0%, rgba(61, 47, 31, 0.08) 50%, transparent 100%);
+    border-top: 1px solid var(--line-strong);
+    border-bottom: 1px solid var(--line-strong);
+  }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    margin-top: 80px;
+    border-top: 1px solid var(--line-strong);
+  }
+  .service {
+    padding: 56px 40px;
+    border-left: 1px solid var(--line-strong);
+    border-bottom: 1px solid var(--line-strong);
+    transition: background 0.4s;
+    position: relative;
+  }
+  .service:last-child { border-left: none; }
+  .service:hover { background: rgba(26, 15, 8, 0.08); }
+
+  .service-num {
+    font-family: var(--serif-display);
+    font-size: 14px;
+    color: var(--bg-dark);
+    letter-spacing: 0.3em;
+    margin-bottom: 32px;
+    font-weight: 700;
+  }
+  .service-title {
+    font-family: var(--serif-display);
+    font-size: 32px;
+    margin-bottom: 16px;
+    letter-spacing: -0.01em;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .service-title em { font-style: normal; color: var(--bg-dark); font-weight: 700;}
+  .service-desc {
+    color: var(--ink-dim);
+    font-size: 15px;
+    margin-bottom: 32px;
+    line-height: 1.9;
+    font-weight: 500;
+  }
+  .service-price {
+    font-family: var(--serif);
+    font-size: 22px;
+    color: var(--ink);
+    padding-top: 24px;
+    border-top: 1px solid var(--line-strong);
+    font-weight: 700;
+  }
+  .service-price small { color: var(--ink-mute); font-size: 11px; letter-spacing: 0.2em; display: block; margin-bottom: 4px; font-weight: 600;}
+
+  /* ========== TESTIMONIAL ========== */
+  .testimonial-section {
+    padding: 160px 56px;
+    text-align: center;
+  }
+  .quote-mark {
+    font-family: var(--serif-display);
+    font-size: 120px;
+    color: var(--bg-dark);
+    line-height: 1;
+    margin-bottom: 24px;
+    opacity: 0.5;
+    font-weight: 700;
+  }
+  .testimonial {
+    font-family: var(--serif);
+    font-size: clamp(24px, 3vw, 36px);
+    line-height: 1.5;
+    max-width: 900px;
+    margin: 0 auto 40px;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .testimonial-author {
+    font-size: 12px;
+    letter-spacing: 0.4em;
+    color: var(--ink-mute);
+    font-weight: 600;
+  }
+  .testimonial-author span { color: var(--bg-dark); font-weight: 700; }
+
+  /* ========== CONTACT ========== */
+  .contact {
+    background: linear-gradient(180deg, transparent 0%, rgba(61, 47, 31, 0.08) 50%, transparent 100%);
+    border-top: 1px solid var(--line-strong);
+  }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    margin-top: 80px;
+  }
+  .contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .info-item {
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--line-strong);
+  }
+  .info-label {
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    color: var(--ink-mute);
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+  .info-value {
+    font-family: var(--serif);
+    font-size: 22px;
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .info-value a { color: inherit; text-decoration: none; transition: color 0.3s; }
+  .info-value a:hover { color: var(--bg-dark); }
+
+  .form-group { margin-bottom: 24px; }
+  .form-label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--ink-mute);
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+  .form-input,
+  .form-textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--line-strong);
+    padding: 12px 0;
+    font-family: var(--arabic);
+    font-size: 15px;
+    color: var(--ink);
+    transition: border-color 0.3s;
+    font-weight: 500;
+  }
+  .form-input:focus,
+  .form-textarea:focus {
+    outline: none;
+    border-bottom-color: var(--ink);
+  }
+  .form-input::placeholder,
+  .form-textarea::placeholder {
+    color: var(--ink-mute);
+  }
+  .form-textarea { resize: vertical; min-height: 100px; }
+
+  /* ========== FOOTER ========== */
+  footer {
+    padding: 56px;
+    border-top: 1px solid var(--line-strong);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 24px;
+    font-size: 12px;
+    color: var(--ink-mute);
+    letter-spacing: 0.15em;
+    background: rgba(26, 15, 8, 0.08);
+    font-weight: 600;
+  }
+  .socials {
+    display: flex;
+    gap: 24px;
+  }
+  .socials a {
+    color: var(--ink);
+    text-decoration: none;
+    transition: color 0.3s;
+    font-weight: 700;
+  }
+  .socials a:hover { color: var(--bg-dark); }
+
+  /* ========== ANIMATIONS ========== */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.2); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* زر واتساب عائم */
+  .whatsapp-float {
+    position: fixed;
+    bottom: 32px;
+    left: 32px;
+    width: 64px;
+    height: 64px;
+    background: #25d366;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-decoration: none;
+    box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4), 0 0 0 0 rgba(37, 211, 102, 0.5);
+    z-index: 99;
+    transition: transform 0.3s, box-shadow 0.3s;
+    animation: wppPulse 2.5s infinite;
+  }
+  .whatsapp-float:hover {
+    transform: scale(1.1);
+    animation: none;
+  }
+  .whatsapp-float svg {
+    width: 32px;
+    height: 32px;
+    fill: white;
+  }
+  @keyframes wppPulse {
+    0% { box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4), 0 0 0 0 rgba(37, 211, 102, 0.5); }
+    70% { box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4), 0 0 0 18px rgba(37, 211, 102, 0); }
+    100% { box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4), 0 0 0 0 rgba(37, 211, 102, 0); }
+  }
+
+  /* ========== RESPONSIVE ========== */
+  @media (max-width: 900px) {
+    nav { padding: 12px 24px; }
+    .nav-links { display: none; }
+    .logo img { height: 56px; }
+    section, .hero { padding: 100px 24px; }
+    .hero {
+      grid-template-columns: 1fr;
+      padding-top: 120px;
+      gap: 40px;
+    }
+    .hero-image { height: 60vh; }
+    .about-grid { grid-template-columns: 1fr; gap: 40px; }
+    .gallery { grid-template-columns: repeat(6, 1fr); }
+    .gallery-item-1, .gallery-item-7 { grid-column: span 6; }
+    .gallery-item-2, .gallery-item-6 { grid-column: span 6; }
+    .gallery-item-3, .gallery-item-4, .gallery-item-5 { grid-column: span 3; }
+    .services-grid { grid-template-columns: 1fr; }
+    .service { border-left: none; }
+    .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+    .stats { grid-template-columns: 1fr; gap: 24px; }
+    footer { flex-direction: column; text-align: center; padding: 32px 24px;}
+    .category-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+    .category-num { font-size: 56px; }
+    .category-block { margin-bottom: 80px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor-dot" id="cursorDot"></div>
+
+<!-- زر واتساب عائم -->
+<a href="https://wa.me/966563665173" target="_blank" class="whatsapp-float" title="تواصلي عبر واتساب">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/>
+  </svg>
+</a>
+
+<!-- ========== NAV ========== -->
+<nav>
+  <div class="logo">
+    <img src="logo-light.png" alt="BATTA Photographer" />
+  </div>
+  <ul class="nav-links">
+    <li><a href="#about">عني</a></li>
+    <li><a href="#portfolio">الأعمال</a></li>
+    <li><a href="#services">الخدمات</a></li>
+    <li><a href="#contact">تواصل</a></li>
+  </ul>
+</nav>
+
+<!-- ========== HERO ========== -->
+<section class="hero">
+  <div class="hero-text">
+    <div class="hero-eyebrow">مناسبات &amp; مواليد · BATTA</div>
+    <h1>أُخلّد<br />لحظاتكم<br /><em>بأسلوبٍ راقٍ.</em></h1>
+    <p class="hero-sub">
+      أنا بطّة — مصوّرة مناسبات ومواليد. أؤمن أن التفاصيل الحلوة تهمّك مثلما تهمّني، ولذلك أضمن لكِ صوراً تُفرِح قلبكِ قبل ما تُفرِح عينكِ. ✨
+    </p>
+    <div class="hero-cta">
+      <a href="https://wa.me/966563665173" target="_blank" class="btn btn-primary">احجزي الآن عبر واتساب</a>
+      <a href="#portfolio" class="btn btn-ghost">شاهدي الأعمال</a>
+    </div>
+  </div>
+  <div class="hero-image">
+    <div class="hero-image-frame">
+      <div class="hero-image-bg"></div>
+      <!-- Decorative bokeh & light rays -->
+      <svg viewBox="0 0 600 800" preserveAspectRatio="xMidYMid slice" style="position:absolute; inset:0;">
+        <defs>
+          <radialGradient id="lensGlow" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stop-color="#c9a96e" stop-opacity="0.4"/>
+            <stop offset="40%" stop-color="#8a7549" stop-opacity="0.15"/>
+            <stop offset="100%" stop-color="#0a0908" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect width="600" height="800" fill="url(#lensGlow)"/>
+        <!-- Light rays -->
+        <g opacity="0.15" stroke="#c9a96e" stroke-width="0.5" fill="none">
+          <line x1="100" y1="100" x2="280" y2="380"/>
+          <line x1="500" y1="120" x2="320" y2="380"/>
+          <line x1="120" y1="700" x2="280" y2="420"/>
+          <line x1="480" y1="680" x2="320" y2="420"/>
+        </g>
+        <!-- Bokeh circles -->
+        <circle cx="120" cy="180" r="8" fill="#c9a96e" opacity="0.3"/>
+        <circle cx="480" cy="220" r="14" fill="#c9a96e" opacity="0.2"/>
+        <circle cx="80" cy="600" r="10" fill="#c9a96e" opacity="0.25"/>
+        <circle cx="520" cy="640" r="6" fill="#c9a96e" opacity="0.4"/>
+        <circle cx="540" cy="380" r="20" fill="#c9a96e" opacity="0.1"/>
+      </svg>
+      <!-- Actual brand logo -->
+      <img src="logo-light.png" alt="BATTA Photographer" class="hero-logo" />
+    </div>
+    <div class="hero-image-num">N° 001 / SIGNATURE</div>
+    <div class="hero-image-label">— BATTA Photography Studio</div>
+  </div>
+  <div class="scroll-indicator">SCROLL</div>
+</section>
+
+<!-- ========== ABOUT ========== -->
+<section class="about" id="about">
+  <div class="section-label reveal">الفنانة</div>
+  <h2 class="section-title reveal">خلف <em>العدسة</em></h2>
+
+  <div class="about-grid" style="margin-top: 80px;">
+    <div class="about-portrait reveal">
+      <svg viewBox="0 0 400 533" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <radialGradient id="portraitGlow" cx="50%" cy="35%" r="50%">
+            <stop offset="0%" stop-color="#c9a96e" stop-opacity="0.25"/>
+            <stop offset="100%" stop-color="#0a0908" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="silhouette" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#2a2520"/>
+            <stop offset="100%" stop-color="#0a0908"/>
+          </linearGradient>
+        </defs>
+        <rect width="400" height="533" fill="url(#portraitGlow)"/>
+
+        <!-- Silhouette of photographer -->
+        <g transform="translate(200, 280)">
+          <!-- Head -->
+          <ellipse cx="0" cy="-90" rx="42" ry="50" fill="url(#silhouette)"/>
+          <!-- Hair -->
+          <path d="M -45 -100 Q -50 -135 -20 -140 Q 0 -148 25 -140 Q 50 -135 45 -100 Q 42 -88 38 -82 Q 30 -100 0 -102 Q -30 -100 -38 -82 Q -42 -88 -45 -100 Z" fill="#0a0908"/>
+          <!-- Neck/shoulders -->
+          <path d="M -28 -50 Q -25 -30 -35 -10 L -120 80 L -120 200 L 120 200 L 120 80 L 35 -10 Q 25 -30 28 -50 Z" fill="url(#silhouette)"/>
+          <!-- Camera held to face -->
+          <rect x="-15" y="-105" width="60" height="35" rx="4" fill="#1a1612" stroke="#c9a96e" stroke-width="0.5"/>
+          <circle cx="15" cy="-87" r="14" fill="#0a0908" stroke="#c9a96e" stroke-width="0.8"/>
+          <circle cx="15" cy="-87" r="8" fill="#c9a96e" opacity="0.3"/>
+          <circle cx="13" cy="-89" r="3" fill="#f4ede4" opacity="0.5"/>
+          <!-- Hand holding camera -->
+          <ellipse cx="-10" cy="-78" rx="14" ry="10" fill="#1a1612"/>
+        </g>
+
+        <!-- Light beam -->
+        <path d="M 0 0 L 200 280 L 80 533 L 0 533 Z" fill="#c9a96e" opacity="0.04"/>
+
+        <!-- Frame corner marks -->
+        <g stroke="#c9a96e" stroke-width="1" fill="none" opacity="0.5">
+          <path d="M 20 20 L 20 50 M 20 20 L 50 20"/>
+          <path d="M 380 20 L 380 50 M 380 20 L 350 20"/>
+          <path d="M 20 513 L 20 483 M 20 513 L 50 513"/>
+          <path d="M 380 513 L 380 483 M 380 513 L 350 513"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="about-content reveal">
+      <p>
+        أهلاً، أنا <strong>بطّة</strong> — مصوّرة متخصّصة في تصوير <strong>المناسبات والمواليد</strong>.
+      </p>
+      <p>
+        أحرص أن أُخلّد لحظاتكم بأسلوبٍ راقٍ وجودة عالية تليق بذكرياتكم. أؤمن أن لحظة واحدة تستحقّ كل التحضير، وأن الصورة الجيدة هي اللي تشعرك إنّك "عشتي" اللحظة من جديد كل ما رجعتِ لها.
+      </p>
+      <p>
+        يسعدني أكون جزءاً من مناسباتكم الجميلة، وأضمن لكِ صوراً تُفرِح قلبكِ قبل ما تُفرِح عينكِ — لأن التفاصيل الحلوة تهمّني مثلكِ تماماً. ✨
+      </p>
+      <div class="signature">— BATTA</div>
+
+      <div class="stats">
+        <div>
+          <div class="stat-num">+250</div>
+          <div class="stat-label">مشروع منجز</div>
+        </div>
+        <div>
+          <div class="stat-num">+80</div>
+          <div class="stat-label">عميل سعيد</div>
+        </div>
+        <div>
+          <div class="stat-num">5</div>
+          <div class="stat-label">سنوات خبرة</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== PORTFOLIO ========== -->
+<section id="portfolio">
+  <div style="text-align: center; margin-bottom: 100px;">
+    <div class="section-label reveal" style="justify-content: center;">المعرض</div>
+    <h2 class="section-title reveal">أعمال <em>مختارة</em></h2>
+    <p class="reveal" style="max-width: 600px; margin: 24px auto 0; color: var(--ink-dim); font-size: 16px; line-height: 1.9; font-weight: 500;">
+      كل صورة لحظة خُلِّدت بأسلوب راقٍ. تصفّحي أعمالي مقسّمة حسب نوع المناسبة.
+    </p>
+  </div>
+
+  <!-- ===== فئة 1: أعراس ===== -->
+  <div class="category-block">
+    <div class="category-header reveal">
+      <div class="category-num">01</div>
+      <div>
+        <h3 class="category-title">أعراس &amp; <em>زواجات</em></h3>
+        <p class="category-desc">يومٌ واحد لا يتكرر — أحفظه لكِ بأدق تفاصيله.</p>
+      </div>
+    </div>
+    <div class="gallery">
+      <div class="gallery-item gallery-item-1 reveal">
+        <img src="images/wedding-1.jpg" alt="عروس - تصوير بطّة" loading="lazy" />
+        <div class="gallery-overlay">
+          <div class="gallery-cat">WEDDING</div>
+          <div class="gallery-title">The Bride</div>
+        </div>
+      </div>
+      <div class="gallery-item gallery-item-2 reveal">
+        <img src="images/wedding-2.jpg" alt="عروس - تصوير بطّة" loading="lazy" />
+        <div class="gallery-overlay">
+          <div class="gallery-cat">WEDDING</div>
+          <div class="gallery-title">Eternal Beauty</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== فئة 2: كوفيهات ===== -->
+  <div class="category-block">
+    <div class="category-header reveal">
+      <div class="category-num">02</div>
+      <div>
+        <h3 class="category-title">كافيهات &amp; <em>جلسات</em></h3>
+        <p class="category-desc">جلسات تصوير في أجواء كافيهات راقية — أنيقة وعفوية.</p>
+      </div>
+    </div>
+    <div class="gallery">
+      <div class="gallery-item gallery-item-1 reveal">
+        <img src="images/cafe-1.jpg" alt="جلسة كافيه - تصوير بطّة" loading="lazy" />
+        <div class="gallery-overlay">
+          <div class="gallery-cat">CAFÉ SESSION</div>
+          <div class="gallery-title">Latte Art</div>
+        </div>
+      </div>
+      <div class="gallery-item gallery-item-2 reveal">
+        <img src="images/cafe-2.jpg" alt="جلسة كافيه - تصوير بطّة" loading="lazy" />
+        <div class="gallery-overlay">
+          <div class="gallery-cat">CAFÉ SESSION</div>
+          <div class="gallery-title">Quiet Moment</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== فئة 3: مواليد ===== -->
+  <div class="category-block">
+    <div class="category-header reveal">
+      <div class="category-num">03</div>
+      <div>
+        <h3 class="category-title">مواليد &amp; <em>أطفال</em></h3>
+        <p class="category-desc">أول لحظات حياتهم — صور هادئة ودافئة تحفظ كل تفصيلة.</p>
+      </div>
+    </div>
+    <div class="gallery">
+      <div class="gallery-item gallery-item-1 reveal">
+        <img src="images/baby-1.jpg" alt="جلسة مولود - تصوير بطّة" loading="lazy" />
+        <div class="gallery-overlay">
+          <div class="gallery-cat">NEWBORN</div>
+          <div class="gallery-title">Sweet Dreams</div>
+        </div>
+      </div>
+      <div class="gallery-item gallery-item-2 reveal">
+        <img src="images/baby-2.jpg" alt="جلسة مولود - تصوير بطّة" loading="lazy" />
+        <div class="gallery-overlay">
+          <div class="gallery-cat">NEWBORN</div>
+          <div class="gallery-title">Mother's Touch</div>
+        </div>
+      </div>
+      <div class="gallery-item gallery-item-3 reveal">
+        <img src="images/baby-3.jpg" alt="جلسة مولود - تصوير بطّة" loading="lazy" />
+        <div class="gallery-overlay">
+          <div class="gallery-cat">NEWBORN</div>
+          <div class="gallery-title">Father's Love</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== فئة 4: مناسبات أخرى - قريباً ===== -->
+  <div class="category-block">
+    <div class="category-header reveal">
+      <div class="category-num">04</div>
+      <div>
+        <h3 class="category-title">مناسبات <em>متنوعة</em></h3>
+        <p class="category-desc">أعياد ميلاد، تخرّجات، خطوبات، استقبالات — كل لحظة جميلة تستحق.</p>
+      </div>
+    </div>
+    <div class="coming-soon reveal">
+      <div class="coming-soon-icon">✨</div>
+      <h4 class="coming-soon-title">أعمال جديدة <em>قريباً</em></h4>
+      <p class="coming-soon-text">
+        أحدث جلساتي للمناسبات الخاصة قيد التنقيح. تابعيني على إنستقرام لمشاهدة الأعمال الجديدة فور نشرها، أو احجزي مناسبتك الآن.
+      </p>
+      <div class="coming-soon-buttons">
+        <a href="https://wa.me/966563665173" target="_blank" class="btn btn-primary">احجزي عبر واتساب</a>
+        <a href="https://www.instagram.com/e78.t" target="_blank" class="btn btn-ghost">تابعي على إنستقرام</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SERVICES ========== -->
+<section class="services" id="services">
+  <div class="section-label reveal">العروض</div>
+  <h2 class="section-title reveal">باقات <em>مصمَّمة</em> لك</h2>
+
+  <div class="services-grid">
+    <div class="service reveal">
+      <div class="service-num">01 — WEDDING</div>
+      <h3 class="service-title">تصوير <em>أعراس</em></h3>
+      <p class="service-desc">
+        تغطية يومك الكبير بأسلوب راقٍ — من التحضير حتى نهاية الحفل. صور تخلّد كل تفصيلة جميلة بجودة سينمائية عالية.
+      </p>
+      <div class="service-price">
+        <small>تواصلي للتفاصيل</small>
+        حسب الباقة
+      </div>
+    </div>
+
+    <div class="service reveal">
+      <div class="service-num">02 — CAFÉ &amp; NEWBORN</div>
+      <h3 class="service-title">جلسات <em>راقية</em></h3>
+      <p class="service-desc">
+        جلسات تصوير في كافيهات أنيقة، أو جلسات هادئة لمواليدكم في البيت أو الاستوديو. صور دافئة تحفظ اللحظة كما هي.
+      </p>
+      <div class="service-price">
+        <small>تواصلي للتفاصيل</small>
+        حسب الباقة
+      </div>
+    </div>
+
+    <div class="service reveal">
+      <div class="service-num">03 — EVENTS</div>
+      <h3 class="service-title">مناسبات <em>متنوعة</em></h3>
+      <p class="service-desc">
+        أعياد ميلاد، تخرّجات، استقبالات، خطوبات، جلسات عائلية، حمل — كل مناسبة عزيزة عليكِ تستحق التخليد.
+      </p>
+      <div class="service-price">
+        <small>تواصلي للتفاصيل</small>
+        حسب الباقة
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== TESTIMONIAL ========== -->
+<section class="testimonial-section">
+  <div class="quote-mark reveal">"</div>
+  <p class="testimonial reveal">
+    سارة لا تلتقط الصور — هي تنحتها. كل لقطة من جلسة زفافنا كانت قطعة فنية مستقلّة. لم نتخيّل أن يومنا سيُحفظ بهذا الجمال.
+  </p>
+  <div class="testimonial-author reveal">— نورة &amp; <span>عبدالله</span> · عميلان منذ 2024</div>
+</section>
+
+<!-- ========== CONTACT ========== -->
+<section class="contact" id="contact">
+  <div class="section-label reveal">تواصل</div>
+  <h2 class="section-title reveal">لنروِ <em>قصتك</em> معاً</h2>
+
+  <div class="contact-grid">
+    <div class="contact-info reveal">
+      <div class="info-item">
+        <div class="info-label">WHATSAPP — للحجز والاستفسار</div>
+        <div class="info-value"><a href="https://wa.me/966563665173" target="_blank">0563665173 📱</a></div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">INSTAGRAM</div>
+        <div class="info-value"><a href="https://www.instagram.com/e78.t" target="_blank">@e78.t</a></div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">TIKTOK</div>
+        <div class="info-value"><a href="https://www.tiktok.com/@11xt1" target="_blank">@11xt1</a></div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">CATALOG — كتالوج الأعمال</div>
+        <div class="info-value"><a href="https://wa.me/c/966563665173" target="_blank">شاهدي الكتالوج كاملاً ←</a></div>
+      </div>
+    </div>
+
+    <form class="contact-form reveal" onsubmit="handleSubmit(event)">
+      <div class="form-group">
+        <label class="form-label">الاسم</label>
+        <input type="text" class="form-input" required />
+      </div>
+      <div class="form-group">
+        <label class="form-label">رقم التواصل</label>
+        <input type="tel" class="form-input" required placeholder="05xxxxxxxx" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">نوع المناسبة</label>
+        <input type="text" class="form-input" placeholder="مولود · خطوبة · عيد ميلاد · جلسة عائلية..." />
+      </div>
+      <div class="form-group">
+        <label class="form-label">حدّثيني عن مناسبتك</label>
+        <textarea class="form-textarea" rows="4" placeholder="التاريخ، المكان، عدد الأشخاص، أي تفاصيل تحبين أعرفها..."></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary" style="margin-top: 16px;">إرسال الطلب</button>
+    </form>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer>
+  <div>© 2026 BATTA PHOTOGRAPHER · صور تفرّح قلبك قبل ما تفرّح عينك ✨</div>
+  <div class="socials">
+    <a href="https://www.instagram.com/e78.t" target="_blank">INSTAGRAM</a>
+    <a href="https://www.tiktok.com/@11xt1" target="_blank">TIKTOK</a>
+    <a href="https://wa.me/966563665173" target="_blank">WHATSAPP</a>
+  </div>
+</footer>
+
+<script>
+  // Cursor dot
+  const cursor = document.getElementById('cursorDot');
+  document.addEventListener('mousemove', (e) => {
+    cursor.style.left = e.clientX - 4 + 'px';
+    cursor.style.top = e.clientY - 4 + 'px';
+    cursor.style.opacity = '1';
+  });
+  document.addEventListener('mouseleave', () => cursor.style.opacity = '0');
+
+  // Hover scale
+  document.querySelectorAll('a, button, .gallery-item').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.style.transform = 'scale(2.5)');
+    el.addEventListener('mouseleave', () => cursor.style.transform = 'scale(1)');
+  });
+
+  // Reveal on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Form
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    const original = btn.textContent;
+    btn.textContent = '✓ تم الإرسال';
+    btn.style.background = 'var(--gold)';
+    setTimeout(() => {
+      btn.textContent = original;
+      e.target.reset();
+    }, 2500);
+  }
+</script>
+
+</body>
+</html>
